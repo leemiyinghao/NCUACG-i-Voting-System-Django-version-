@@ -18,5 +18,6 @@ from . import views
 
 urlpatterns = [
     #twitter login
-    url(r'^twitterlogin/', views.twitterlogin, name='Twitter Login'),
+    url(r'^twitterlogin/callback', views.twitterCallback, name='Twitter Callback'),
+    url(r'^twitterlogin/$', views.twitterAuth, name='Twitter Login'),
 ]
