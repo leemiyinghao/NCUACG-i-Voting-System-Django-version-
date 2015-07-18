@@ -1,6 +1,5 @@
 from django.db import models
 
-# Create your models here.
 class VoteableUser(models.Model):
     userName = models.CharField(max_length=50)
     nickName = models.CharField(max_length=50)
@@ -25,13 +24,13 @@ class FetchVote(models.Model):
     roomID = models.ForeignKey(VoteList)
     fetchDate = models.DateTimeField()
 
+class Options(models.Model):
+    roomID = models.ForeignKey(VoteList)
+    text = models.TextField(max_length=500)
+
 class VoteTicket(models.Model):
     roomID = models.ForeignKey(VoteList)
     userName = models.CharField(max_length=50)
     score = models.IntegerField(default=0)
     optionID = models.ForeignKey(Options)
     doneVideo = models.BooleanField()  
-
-class Options(models.Model):
-    roomID = models.ForeignKey(VoteList)
-    text = models.TextField(max_length=500)
