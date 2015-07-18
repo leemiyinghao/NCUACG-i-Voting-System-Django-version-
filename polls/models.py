@@ -33,4 +33,4 @@ class VoteTicket(models.Model):
     userName = models.CharField(max_length=50)
     score = models.IntegerField(default=0)
     optionID = models.ForeignKey(Options)
-    doneVideo = models.BooleanField()  
+    doneVideo = models.BooleanField(default=False)  
