@@ -17,9 +17,6 @@ class Migration(migrations.Migration):
                 ('userName', models.CharField(max_length=50)),
                 ('fetchDate', models.DateTimeField()),
             ],
-            options={
-            },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='Options',
@@ -27,9 +24,6 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('text', models.TextField(max_length=500)),
             ],
-            options={
-            },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='VoteableUser',
@@ -37,11 +31,8 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('userName', models.CharField(max_length=50)),
                 ('nickName', models.CharField(max_length=50)),
-                ('icon', models.ImageField(default=b'user_icon/Default.png', upload_to=b'user_icon')),
+                ('icon', models.ImageField(default=b'static/usericon/default.png', upload_to=b'usericon')),
             ],
-            options={
-            },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='VoteList',
@@ -56,9 +47,6 @@ class Migration(migrations.Migration):
                 ('maxSelectCount', models.IntegerField(default=1)),
                 ('videoLength', models.IntegerField(default=0)),
             ],
-            options={
-            },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='VoteTicket',
@@ -66,24 +54,19 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('userName', models.CharField(max_length=50)),
                 ('score', models.IntegerField(default=0)),
-                ('doneVideo', models.BooleanField()),
-                ('optionID', models.ForeignKey(to='polls.Options')),
-                ('roomID', models.ForeignKey(to='polls.VoteList')),
+                ('doneVideo', models.BooleanField(default=False)),
+                ('optionID', models.ForeignKey(to='Vote.Options')),
+                ('roomID', models.ForeignKey(to='Vote.VoteList')),
             ],
-            options={
-            },
-            bases=(models.Model,),
         ),
         migrations.AddField(
             model_name='options',
             name='roomID',
-            field=models.ForeignKey(to='polls.VoteList'),
-            preserve_default=True,
+            field=models.ForeignKey(to='Vote.VoteList'),
         ),
         migrations.AddField(
             model_name='fetchvote',
             name='roomID',
-            field=models.ForeignKey(to='polls.VoteList'),
-            preserve_default=True,
+            field=models.ForeignKey(to='Vote.VoteList'),
         ),
     ]
