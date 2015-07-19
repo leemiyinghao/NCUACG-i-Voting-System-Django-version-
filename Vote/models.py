@@ -3,7 +3,7 @@ from django.db import models
 class VoteableUser(models.Model):
     userName = models.CharField(max_length=50)
     nickName = models.CharField(max_length=50)
-    icon = models.ImageField(upload_to = 'user_icon', default = 'user_icon/Default.png')
+    icon = models.ImageField(upload_to = 'usericon', default = 'static/usericon/default.png')
     
 class VoteList(models.Model):
     title = models.CharField(max_length=50)
