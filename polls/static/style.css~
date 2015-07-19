@@ -1,0 +1,117 @@
+.voteblock{
+    text-align: center;
+}
+.voteblock input{
+    opacity: 0 !important;
+    width: 0 !important;
+    position: absolute !important;
+}
+.voteblock input:checked+label div{
+    font-weight:800;
+    background: white;
+    color: white;
+}
+.voteblock input:checked+label div.radioPositive{
+    Background:#57C54F;
+}
+.voteblock input:checked+label div.radioNegative{
+    Background:#FF6161;
+}
+.voteblock input:checked+label div.radioNonjudge{
+    Background:#919191;
+}
+.votelist{
+    border-width: 1px 1px 1px 20px;
+    padding: 15px;
+    margin: 0 35px 35px 0;
+    width: 100%;
+    height: 150px;
+    color: black;
+    border: solid;
+    border-width: 0 0 0 5px;
+    border-color: #00ADF2;
+}
+.emergency{
+    border-color: #FF3A3A;
+}
+.votelink:hover{
+    text-decoration: none;
+}
+.votelink:hover .votetitle{
+    text-decoration: underline;
+}
+.date{
+    font-size: small;
+}
+.votetitle{
+    clear: both;
+    font-size: 120%;
+    margin-bottom: 5px;
+    color: #00ADF2;
+}
+.votetitle emergency {
+    color: FF3A3A;
+}
+.input-outer{
+    text-align: center;
+}
+.radioPositive{
+    border: 1px solid #57C54F;
+    border-radius:15px 0 0 15px;
+    color: #57C54F;
+}
+.radioNegative{
+    border: 1px solid #FF6161;
+    border-radius:0 15px 15px 0;
+    color: #FF6161;
+}
+.radioNonjudge{
+    border: 1px solid #919191;
+    color: #919191;
+}
+.h5outer{
+    border: 1px black solid;
+    border-width: 0 0 1px 0;
+    text-align:left;
+}
+.voteblock input+label,
+.disableradio{
+    width: 150px;
+    line-height: 50px;
+    margin: auto;
+    margin-top: 30px;
+    text-align:center;
+    color:white;
+    cursor:pointer;
+}
+.disableradio{
+    width: 250px;
+    Background:#393939;
+    border-radius:15px;
+    cursor:default;
+}
+.btn-submit{
+    clear: both;
+    max-width: 350px;
+    margin:auto;
+    margin-top: 60px;
+    margin-bottom: 15px;
+}
+.center{
+    text-align: center;
+    margin: auto;
+}
+.submit-area{
+    clear: both;
+}
+.submit-area i{
+    color: red;
+}
+#footer{
+    margin-top:60px;
+    padding: 15px;
+    color: #696969;
+    text-align: center;
+    width: 100%;
+    Background: #393939;
+}

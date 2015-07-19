@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>NCUACG i-Voting System FUMITSUKI</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="description" content="" />
+    <meta name="copyright" content="" />
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/style.css" media="all" />
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <style>
+      li{
+      line-height: 230%;
+      list-style: none;
+      }
+      li span{
+      margin-left: 15px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-container">
+    <div class="navbar navbar-inverse">
+	<div class="container">
+	  <a href="/" class="navbar-brand">NCUACG i-Voting<span style="color: cyan"> FUMITSUKI</span></a>
+          <span class="navbar-right navbar-text">Logged as: <a href="https://twitter.com/screen_name" target="_blank" class="navbar-link">{{ request.session['userName'] }}</a></span>
+	</div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="row">
+	<div class="col-sm-4">
+	  <div class="votelist{% if VOTED %} voted{% elif TIME_TO_EXPIRE < 3 * 86400 %} emergency{% endif %}">
+	    <span class="date">{{ DATE_PUB }}</span>
+	    <a href="/voteroom/{{ VOTE_ID }}" class="votelink">
+	      <div class="votetitle">
+		{% if VOTE_TYPE == "video" %}
+		<i class="fa fa-video-camera"></i>
+		{% endif %}
+		{{ VOTE_TITLE }}
+	      </div>
+	    </a>
+	    <div class="votedescribe">
+	      <p>{{ VOTE_DESCRIBE }}</p>
+	    </div>
+	    <div class="votecountdown">剩餘 {{ DAY_TO_EXPIRE }} 天</div>
+	    <!-- TODO: Change unit depand on length of DAY_TO_EXPIRE -->
+	  </div>
+	</div>
+      </div>
+    </div>
+    <div class="clear"></div>
+    <div id="footer">
+      <i>NCUACG, All Right Reserve.</i>
+    </div>
+</body></html>
