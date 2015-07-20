@@ -1,5 +1,6 @@
 from django.shortcuts import render,redirect
 from twython import Twython
+from .models import VoteableUser, VoteList, FetchVote, VoteTicket, Options
 from django.http import HttpResponse
 from django.conf import settings
 from django.contrib.auth import authenticate, login, logout as django_logout
@@ -27,3 +28,8 @@ def twitterCallback(request):
     return redirect("/login/")
 
 # Write the rest of code here
+def index(request):
+    voteList = VoteList.objects.order_by('-expireDate')
+    VOTED = 1
+    context = {'voteList': voteList,'VOTED': VOTED}
+    return render(request, 'Vote/index.html', context)

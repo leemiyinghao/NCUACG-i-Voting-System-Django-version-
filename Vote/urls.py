@@ -20,4 +20,5 @@ urlpatterns = [
     #twitter login
     url(r'^twitterlogin/callback', views.twitterCallback, name='Twitter Callback'),
     url(r'^twitterlogin/$', views.twitterAuth, name='Twitter Login'),
+    url(r'^', views.index, name='index'),
 ]
