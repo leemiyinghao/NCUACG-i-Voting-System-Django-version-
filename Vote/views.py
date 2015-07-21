@@ -30,6 +30,23 @@ def twitterCallback(request):
 # Write the rest of code here
 def index(request):
     voteList = VoteList.objects.order_by('-expireDate')
-    VOTED = 1
-    context = {'voteList': voteList,'VOTED': VOTED}
+    fetchVote = None
+    voted = [False]
+    '''
+    try:
+        sid = request.COOKIES['sessionid']
+    except KeyError:
+            return redirect("/login/")
+    '''
+    for vote in voteList:
+        try:
+            fetchVote=FetchVote.objects.filter(userName=request.session['userName']).filter(roomID=vote.id)
+            if fetchVote != None:
+                voted[vote.id] = True
+        except FetchVote.DoesNotExist:
+            voted[vote.id]=False
+        except KeyError:
+            #return redirect("/login/")
+            a=1
+    context = {'voteList': voteList,'voted': voted,'fetchVote': fetchVote}
     return render(request, 'Vote/index.html', context)

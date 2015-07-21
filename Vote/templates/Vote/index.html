@@ -26,7 +26,7 @@
     <div class="navbar navbar-inverse">
 	<div class="container">
 	  <a href="/" class="navbar-brand">NCUACG i-Voting<span style="color: cyan"> FUMITSUKI</span></a>
-          <span class="navbar-right navbar-text">Logged as: <a href="https://twitter.com/screen_name" target="_blank" class="navbar-link">{{ request.session.user }}</a></span>
+          <span class="navbar-right navbar-text">Logged as: <a href="https://twitter.com/screen_name" target="_blank" class="navbar-link">{{ request.session.userName }}</a></span>
 	</div>
       </div>
     </div>
@@ -34,9 +34,9 @@
       <div class="row">
 	{% for vote in voteList %}
 	<div class="col-sm-4">
-	  <div class="votelist{% if VOTED %} voted{% elif TIME_TO_EXPIRE < 259200 %} emergency{% endif %}">
+	  <div class="votelist{% if voted.vote.id %} voted{% elif vote.expireDate < 259200 %} emergency{% endif %}">
 	    <span class="date">{{ vote.pubDate }}</span>
-	    <a href="/voteroom/{{ VOTE_ID }}" class="votelink">
+	    <a href="/voteroom/{{ vote.id }}" class="votelink">
 	      <div class="votetitle">
 		{% if vote.voteType == "v" %}
 		<i class="fa fa-video-camera"></i>
