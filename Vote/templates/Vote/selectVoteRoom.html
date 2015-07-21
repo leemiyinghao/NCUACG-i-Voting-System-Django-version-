@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>{{VOTE_TITLE}} - NCUACG i-Voting System FUMITSUKI</title>
+    <title>{{vote.title}} - NCUACG i-Voting System FUMITSUKI</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="description" content="" />
@@ -26,23 +26,23 @@
     <div class="navbar navbar-inverse">
 	<div class="container">
 	  <a href="/" class="navbar-brand">NCUACG i-Voting<span style="color: cyan"> FUMITSUKI</span></a>
-          <span class="navbar-right navbar-text">Logged as: <a href="https://twitter.com/request.session['userName']" target="_blank" class="navbar-link">request.session['userName']</a></span>
+          <span class="navbar-right navbar-text">Logged as: <a href="https://twitter.com/request.session['userName']" target="_blank" class="navbar-link">request.session.userName</a></span>
 	</div>
       </div>
     </div>
     <div class="container">
-      <div class="voteroomtitle">{{ VOTE_TITLE }}</div> 
-      <div class="voteroomdate">{{ DATE_PUB }} 至 {{ DATE_EXPIRE }}</div>
-      <div class="voteroommaxselect">最多可選 {{MAX_SELECT}} 個選項</div>
+      <div class="voteroomtitle">{{ vote.title }}</div> 
+      <div class="voteroomdate">{{ vote.pubDate }} 至 {{ vote.expireDate }}</div>
+      <div class="voteroommaxselect">最多可選 {{vote.maxSelectCount}} 個選項</div>
       <div class="voteroomdescribe">
-	{{ VOTE_DERSCRIBE }}
+	{{ vote.describe }}
       </div>
       <div id="voteform">
 	<form action="/vote/id" method="post">
 	  <div class="row">
 	    <div class="col-sm-6">
-	      <input id="option_{{ OPTION_ID }}" type="{% if MAX_SELECT > 1 %}radio{% else %}checkbox{% endif %}" name="option" value="{{ OPTION_ID }}"{% if VOTED and THIS_OPTION_CHECKED %} checked="checked"{% endif %}/>
-	      <label for="option_{{ OPTION_ID }}"><div class="radioPositive">{{ OPTION_TEXT }}</div></label>
+	      <input id="option_{{ option.id }}" type="{% if vote.maxSelectCount > 1 %}radio{% else %}checkbox{% endif %}" name="option" value="{{ option.id }}"{% if VOTED and THIS_OPTION_CHECKED %} checked="checked"{% endif %}/>
+	      <label for="option_{{ option.id }}"><div class="radioPositive">{{ option.text }}</div></label>
 	    </div>
 	    <!-- 3 col in a row -->
 	  </div>

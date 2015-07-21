@@ -2,6 +2,7 @@ from django.shortcuts import render,redirect
 from twython import Twython
 from .models import VoteableUser, VoteList, FetchVote, VoteTicket, Options
 from django.http import HttpResponse
+from django.http import Http404
 from django.conf import settings
 from django.contrib.auth import authenticate, login, logout as django_logout
 from django.contrib.auth import get_user_model
@@ -29,15 +30,16 @@ def twitterCallback(request):
 
 # Write the rest of code here
 def index(request):
-    voteList = VoteList.objects.order_by('-expireDate')
-    fetchVote = None
-    voted = [False]
+    #Not yet complete
     '''
     try:
         sid = request.COOKIES['sessionid']
     except KeyError:
             return redirect("/login/")
     '''
+    voteList = VoteList.objects.order_by('-expireDate')
+    fetchVote = None
+    voted = [False]
     for vote in voteList:
         try:
             fetchVote=FetchVote.objects.filter(userName=request.session['userName']).filter(roomID=vote.id)
@@ -48,5 +50,24 @@ def index(request):
         except KeyError:
             #return redirect("/login/")
             a=1
-    context = {'voteList': voteList,'voted': voted,'fetchVote': fetchVote}
+    context = {'voteList': voteList,'voted': voted}
     return render(request, 'Vote/index.html', context)
+
+def selectVoteRoom(request,voteID):
+    #Not yet complete
+    '''
+    try:
+        sid = request.COOKIES['sessionid']
+    except KeyError:
+            return redirect("/login/")
+    '''
+    try:
+        vote = VoteList.objects.get(pk=voteID)
+    except VoteList.DoesNotExist:
+        raise Http404('Vote Room not found')
+    try:
+        option = Options.objects.filter(roomID=voteID)
+    except Options.DoesNotExist:
+        raise Http404('Option not found')    
+    context = {'vote': vote,'option': option}
+    return render(request, 'Vote/selectVoteRoom.html', context)
