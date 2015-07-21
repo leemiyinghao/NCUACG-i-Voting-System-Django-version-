@@ -66,8 +66,8 @@ def selectVoteRoom(request,voteID):
     except VoteList.DoesNotExist:
         raise Http404('Vote Room not found')
     try:
-        option = Options.objects.filter(roomID=voteID)
+        optionList = Options.objects.filter(roomID=voteID)
     except Options.DoesNotExist:
         raise Http404('Option not found')    
-    context = {'vote': vote,'option': option}
+    context = {'vote': vote,'optionList': optionList}
     return render(request, 'Vote/selectVoteRoom.html', context)

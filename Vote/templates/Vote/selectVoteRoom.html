@@ -39,11 +39,13 @@
       </div>
       <div id="voteform">
 	<form action="/vote/id" method="post">
-	  <div class="row">
+	  <div class="row">	  
+		{% for option in optionList %}
 	    <div class="col-sm-6">
 	      <input id="option_{{ option.id }}" type="{% if vote.maxSelectCount > 1 %}radio{% else %}checkbox{% endif %}" name="option" value="{{ option.id }}"{% if VOTED and THIS_OPTION_CHECKED %} checked="checked"{% endif %}/>
 	      <label for="option_{{ option.id }}"><div class="radioPositive">{{ option.text }}</div></label>
 	    </div>
+		{% endfor %}
 	    <!-- 3 col in a row -->
 	  </div>
 	  <input id="submit" type="submit" class="btn btn-primary btn-lg btn-block btn-submit" value="送出"/>
