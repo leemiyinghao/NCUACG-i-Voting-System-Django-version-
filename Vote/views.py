@@ -30,37 +30,68 @@ def twitterCallback(request):
 
 # Write the rest of code here
 def index(request):
-    #Not yet complete
-    '''
+    #check whether session exist
     try:
         sid = request.COOKIES['sessionid']
     except KeyError:
-            return redirect("/login/")
-    '''
-    voteList = VoteList.objects.order_by('-expireDate')
+        return redirect("/twitterlogin/")
+    #check whether has competence
+    try:
+        user=VoteableUser.objects.get(userName=request.session['userName'])
+    except VoteableUser.DoesNotExist:
+        del request.session['requestToken']
+        return redirect("/twitterlogin/")
+    except KeyError:
+        request.session.clear()
+        return redirect("/twitterlogin/")
+    #main
+    try:
+        voteList = VoteList.objects.order_by('-expireDate')
+    except VoteList.DoesNotExist:
+        voteList = None
     fetchVote = None
     voted = [False]
+    #check whether voted
     for vote in voteList:
         try:
             fetchVote=FetchVote.objects.filter(userName=request.session['userName']).filter(roomID=vote.id)
             if fetchVote != None:
-                voted[vote.id] = True
+                while True:
+                    try:
+                        voted[vote.id] = True
+                        break
+                    except IndexError:
+                        voted.append(False)                
         except FetchVote.DoesNotExist:
-            voted[vote.id]=False
+            while True:
+                try:
+                    voted[vote.id] = False
+                    break
+                except IndexError:
+                    voted.append(False)       
         except KeyError:
-            #return redirect("/login/")
-            a=1
+            return redirect("/twitterlogin/")
     context = {'voteList': voteList,'voted': voted}
     return render(request, 'Vote/index.html', context)
 
 def selectVoteRoom(request,voteID):
-    #Not yet complete
-    '''
+    #check whether session exist
     try:
         sid = request.COOKIES['sessionid']
     except KeyError:
-            return redirect("/login/")
-    '''
+        return redirect("/twitterlogin/")
+    #fetch vote
+    try:
+        fetchVote=FetchVote.objects.filter(userName=request.session['userName']).filter(roomID=voteID)
+    except FetchVote.DoesNotExist:
+        fetchVote=FetchVote()
+        fetchVote.userName = request.session['userName']
+        fetchVote.roomID = VoteList.objects.get(pk=voteID)
+        fetchVote.fetchDate = datetime.datetime.now()
+        fetchVote.save()
+    except KeyError:
+        return redirect("/twitterlogin/")
+    #main
     try:
         vote = VoteList.objects.get(pk=voteID)
     except VoteList.DoesNotExist:
@@ -68,6 +99,20 @@ def selectVoteRoom(request,voteID):
     try:
         optionList = Options.objects.filter(roomID=voteID)
     except Options.DoesNotExist:
-        raise Http404('Option not found')    
+        raise Http404('Option not found')
     context = {'vote': vote,'optionList': optionList}
     return render(request, 'Vote/selectVoteRoom.html', context)
+    
+def sendVote(request,voteID):
+    #check whether session exist
+    try:
+        sid = request.COOKIES['sessionid']
+    except KeyError:
+        return redirect("/twitterlogin/")
+    #main
+    voteTicket = VoteTicket()
+    voteTicket.roomID = VoteList.objects.get(pk=voteID)
+    voteTicket.userName = request.session['userName']
+    voteTicket.optionID = Options.objects.get(pk=request.POST['option'])
+    voteTicket.save()
+    return redirect("/")
