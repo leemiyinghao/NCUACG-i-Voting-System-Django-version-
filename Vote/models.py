@@ -19,7 +19,7 @@ class VoteList(models.Model):
     maxSelectCount = models.IntegerField(default=1)
     videoLength = models.IntegerField(default=0)
     def hasUserFetchVote(self, _userName):
-        if self.fetchvote_set.filter(userName = _userName):
+        if self.fetchvote_set.filter(userName = _userName).count() > 0:
             return True
         else:
             return False
