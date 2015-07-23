@@ -1,24 +1,5 @@
-.voteblock{
-    text-align: center;
-}
-.voteblock input{
-    opacity: 0 !important;
-    width: 0 !important;
-    position: absolute !important;
-}
-.voteblock input:checked+label div{
-    font-weight:800;
-    background: white;
-    color: white;
-}
-.voteblock input:checked+label div.radioPositive{
-    Background:#57C54F;
-}
-.voteblock input:checked+label div.radioNegative{
-    Background:#FF6161;
-}
-.voteblock input:checked+label div.radioNonjudge{
-    Background:#919191;
+.clearboth{
+    clear: both;
 }
 .votelist{
     border-width: 1px 1px 1px 20px;
@@ -42,14 +23,17 @@
 .votelink:hover .votetitle{
     text-decoration: underline;
 }
-.date{
+.date,
+.voteroommaxselect{
     font-size: small;
+    margin-bottom: 5px;
 }
 .votetitle{
     clear: both;
     font-size: 120%;
     margin-bottom: 5px;
     color: #00ADF2;
+    font-weight: 700;
 }
 .emergency .votetitle{
     color: #FF3A3A;
@@ -67,17 +51,49 @@
 .voted .votecountdown{
     color: #2D2D2D;
 }
-.input-outer{
-    text-align: center;
+#votevideo{
+    width: 100%;
+}
+.voteroomtitle{
+    font-size: x-large;
+    font-weight: 700;
+    margin: 15px 0;
+}
+.voteroomdate{
+    font-size: small;
+}
+#voteform{
+    margin: 25px 0;
+}
+#voteform input[type="radio"],
+#voteform input[type="checkbox"]{
+    opacity: 0 !important;
+    width: 0 !important;
+    position: absolute !important;
+}
+#voteform input+label div{
+    border-radius: 15px;
+}
+#voteform input:checked+label div{
+    font-weight:800;
+    background: white;
+    color: white;
+}
+#voteform input:checked+label div.radioPositive{
+    Background:#57C54F;
+}
+#voteform input:checked+label div.radioNegative{
+    Background:#FF6161;
+}
+#voteform input:checked+label div.radioNonjudge{
+    Background:#919191;
 }
 .radioPositive{
     border: 1px solid #57C54F;
-    border-radius:15px 0 0 15px;
     color: #57C54F;
 }
 .radioNegative{
     border: 1px solid #FF6161;
-    border-radius:0 15px 15px 0;
     color: #FF6161;
 }
 .radioNonjudge{
@@ -89,12 +105,10 @@
     border-width: 0 0 1px 0;
     text-align:left;
 }
-.voteblock input+label,
+#voteform input+label,
 .disableradio{
-    width: 150px;
     line-height: 50px;
-    margin: auto;
-    margin-top: 30px;
+    width: 100%;
     text-align:center;
     color:white;
     cursor:pointer;
@@ -107,9 +121,8 @@
 }
 .btn-submit{
     clear: both;
-    max-width: 350px;
     margin:auto;
-    margin-top: 60px;
+    margin-top: 25px;
     margin-bottom: 15px;
 }
 .center{

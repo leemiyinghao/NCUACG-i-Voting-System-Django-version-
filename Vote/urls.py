@@ -18,9 +18,10 @@ from . import views
 
 urlpatterns = [
     #twitter login
-    url(r'^twitterlogin/callback', views.twitterCallback, name='Twitter Callback'),
+    url(r'^twitterlogin/callback$', views.twitterCallback, name='Twitter Callback'),
     url(r'^twitterlogin/$', views.twitterAuth, name='Twitter Login'),
-    url(r'^voteroom/(?P<voteID>[0-9]+)', views.selectVoteRoom, name='selectVoteRoom'),
-    url(r'^vote/(?P<voteID>[0-9]+)', views.sendVote, name='sendVote'),
-    url(r'^', views.index, name='index'),
+    url(r'^voteroom/(?P<voteID>[0-9]+)/$', views.voteRoom, name='voteRoom'),
+    url(r'^vote/(?P<voteID>[0-9]+)/$', views.sendVote, name='sendVote'),
+    url(r'^login/$', views.login, name='login'),
+    url(r'^$', views.index, name='index'),
 ]

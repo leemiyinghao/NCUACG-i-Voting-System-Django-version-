@@ -4,9 +4,7 @@ from .models import VoteableUser, VoteList, FetchVote, VoteTicket, Options
 from django.http import HttpResponse
 from django.http import Http404
 from django.conf import settings
-from django.contrib.auth import authenticate, login, logout as django_logout
-from django.contrib.auth import get_user_model
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, get_object_or_404
 from django.core.urlresolvers import reverse
 from datetime import timedelta
 from django.utils import timezone
@@ -15,71 +13,69 @@ from django.utils import timezone
 def twitterAuth(request):
     twitter = Twython(settings.TWITTER_KEY, settings.TWITTER_SECRET)
     authProps = twitter.get_authentication_tokens(callback_url='http://127.0.0.1:8000/twitterlogin/callback')
-
     request.session['requestToken'] = authProps
-
     return redirect(authProps['auth_url'])
 
 def twitterCallback(request):
     oauthToken = request.session['requestToken']['oauth_token']
     oauthTokenSecret = request.session['requestToken']['oauth_token_secret']
     twitter = Twython(settings.TWITTER_KEY, settings.TWITTER_SECRET, oauthToken, oauthTokenSecret)
-
     authorizedTokens = twitter.get_authorized_tokens(request.GET['oauth_verifier'])
     request.session['userName'] = authorizedTokens['screen_name']
-
     return redirect("/login/")
 
 # Write the rest of code here
 def index(request):
     userName = request.session.get('userName',None)
     if userName == None:
-        #TODO: Non-Logged user index page.
-        return HttpResponse("You have not yet login")
+        return render(request, "Vote/indexNonLogin.html", )
+    elif not VoteableUser.objects.filter(userName = userName).exists():
+        return HttpResponse("Permission denied")
+    voteList = VoteList.objects.filter(expireDate__gt = (timezone.now() - timedelta(days=3))).order_by('-expireDate')
+    return render(request, "Vote/index.html", {'voteList': voteList, 'userName': userName})
+
+def voteRoom(request, voteID):
+    userName = request.session.get('userName', None)
+    if userName == None:
+        return redirect("/")
+    elif not VoteableUser.objects.filter(userName = userName).exists():
+        return redirect("/")
+    vote = get_object_or_404(VoteList, pk = voteID)
+    optionList = Options.objects.filter(roomID = voteID)
+    voted = VoteTicket.objects.filter(userName = userName, roomID = voteID).exists()
+    fetchVote = FetchVote(userName = userName, roomID = vote, fetchDate = timezone.now())
+    fetchVote.save()
+    if vote.voteType == 'v':
+        score=VoteTicket.objects.filter(userName = userName, roomID = voteID).last().score
+        return render(request, 'Vote/videoVoteRoom.html', {'vote': vote,'optionList': optionList, 'userName': userName, 'voted': voted, 'score': score})
     else:
-        voteList = VoteList.objects.filter(expireDate < (timezone.now() - timedelta(days=3)), '-expireDate')
-        #TODO: Modify index.html template
-        return render(request, "Vote/index.html", {'voteList': voteList, 'userName': userName})
+        return render(request, 'Vote/selectVoteRoom.html', {'vote': vote,'optionList': optionList, 'userName': userName, 'voted': voted})
 
-def selectVoteRoom(request,voteID):
-    #check whether session exist
-    try:
-        sid = request.COOKIES['sessionid']
-    except KeyError:
+def sendVote(request, voteID):
+    userName = request.session.get('userName', None)
+    if userName == None:
+        return redirect("/")
+    elif not VoteableUser.objects.filter(userName = userName).exists():
+        return redirect("/")
+    vote = get_object_or_404(VoteList, pk = voteID)
+    if vote.voteType == "v":
+        doneVideo = not request.POST.get('hasDoneTheVideo')==None
+        voteTicket = VoteTicket(roomID = vote, userName = userName, score = request.POST.get('score'), doneVideo = doneVideo)
+        voteTicket.save()
+        return redirect("/")
+    else:
+        optionList = Options.objects.filter(roomID = voteID)
+        for option in optionList:
+            if request.POST.get("option_%d" % option.id) == 'True':
+                voteTicket = VoteTicket(roomID = vote, userName = userName, optionID = option)
+                voteTicket.save()
+        return redirect("/")
+def login(request):
+    userName = request.session.get('userName', None)
+    if userName == None:
         return redirect("/twitterlogin/")
-    #fetch vote
-    try:
-        fetchVote=FetchVote.objects.filter(userName=request.session['userName']).filter(roomID=voteID)
-    except FetchVote.DoesNotExist:
-        fetchVote=FetchVote()
-        fetchVote.userName = request.session['userName']
-        fetchVote.roomID = VoteList.objects.get(pk=voteID)
-        fetchVote.fetchDate = datetime.datetime.now()
-        fetchVote.save()
-    except KeyError:
-        return redirect("/twitterlogin/")
-    #main
-    try:
-        vote = VoteList.objects.get(pk=voteID)
-    except VoteList.DoesNotExist:
-        raise Http404('Vote Room not found')
-    try:
-        optionList = Options.objects.filter(roomID=voteID)
-    except Options.DoesNotExist:
-        raise Http404('Option not found')
-    context = {'vote': vote,'optionList': optionList}
-    return render(request, 'Vote/selectVoteRoom.html', context)
-
-def sendVote(request,voteID):
-    #check whether session exist
-    try:
-        sid = request.COOKIES['sessionid']
-    except KeyError:
-        return redirect("/twitterlogin/")
-    #main
-    voteTicket = VoteTicket()
-    voteTicket.roomID = VoteList.objects.get(pk=voteID)
-    voteTicket.userName = request.session['userName']
-    voteTicket.optionID = Options.objects.get(pk=request.POST['option'])
-    voteTicket.save()
-    return redirect("/")
+    elif VoteableUser.objects.filter(userName = userName).exists():
+        return redirect("/")
+    else:
+        request.session['userName'] = None
+        return render(request, "Vote/permissionNotAllow.html")

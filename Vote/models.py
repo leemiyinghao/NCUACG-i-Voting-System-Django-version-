@@ -4,7 +4,10 @@ class VoteableUser(models.Model):
     userName = models.CharField(max_length=50)
     nickName = models.CharField(max_length=50)
     icon = models.ImageField(upload_to = 'usericon', default = '/static/usericon/default.png')
-    
+
+    def __unicode__(self):
+        return self.nickName
+
 class VoteList(models.Model):
     title = models.CharField(max_length=50)
     describe = models.TextField(max_length=500)
@@ -23,19 +26,27 @@ class VoteList(models.Model):
             return True
         else:
             return False
-    
+    def __unicode__(self):
+        return self.title
+
 class FetchVote(models.Model):
     userName = models.CharField(max_length=50)
     roomID = models.ForeignKey(VoteList)
     fetchDate = models.DateTimeField()
+    def __unicode__(self):
+        return self.userName
 
 class Options(models.Model):
     roomID = models.ForeignKey(VoteList)
     text = models.TextField(max_length=500)
+    def __unicode__(self):
+        return self.text
 
 class VoteTicket(models.Model):
     roomID = models.ForeignKey(VoteList)
     userName = models.CharField(max_length=50)
     score = models.IntegerField(default=0)
-    optionID = models.ForeignKey(Options)
-    doneVideo = models.BooleanField(default=False)  
+    optionID = models.ForeignKey(Options, null=True)
+    doneVideo = models.BooleanField(default=False)
+    def __unicode__(self):
+        return self.roomID.title

@@ -1,3 +1,4 @@
+{% load VoteExtra %}
 <!DOCTYPE html>
 <html>
   <head>
@@ -26,33 +27,35 @@
     <div class="navbar navbar-inverse">
 	<div class="container">
 	  <a href="/" class="navbar-brand">NCUACG i-Voting<span style="color: cyan"> FUMITSUKI</span></a>
-          <span class="navbar-right navbar-text">Logged as: <a href="https://twitter.com/{{ request.session['userName'] }}" target="_blank" class="navbar-link">request.session['userName']</a></span>
+          <span class="navbar-right navbar-text">Logged as: <a href="https://twitter.com/{{ userName }}" target="_blank" class="navbar-link">{{ userName }}</a></span>
 	</div>
       </div>
     </div>
     <div class="container">
       <div id="videoplayer">
-	<video id="votevideo" src="{{ VIDEO_URL }}" controls="controls"></video>
+	<video id="votevideo" src="{{ vote.videoURL }}" controls="controls"></video>
       </div>
-      <div class="voteroomtitle">{{ VOTE_TITLE }}</div> 
-      <div class="voteroomdate">{{ DATE_PUB }} 至 {{ DATE_EXPIRE }}</div>
+      <div class="voteroomtitle">{{ vote.title }}</div>
+      <div class="voteroomdate">{{ vote.pubDate|date:"o/n/d H:i" }} 至 {{ vote.pubDate|date:"o/n/d H:i" }}</div>
       <div class="voteroomdescribe">
-	{{ VOTE_DESCRIBE }}
+	{{ vote.describe }}
       </div>
-      <div id="voteform" {% if !VOTED %}class="hidden"{% endif %}>
-	<form action="/vote/{{ VOTE_ID }}" method="post">
-	  <input id="hasDoneTheVideo" type="checkbox" name="hasDoneTheVideo" value="true" {% if VOTED %}checked="checked"{% endif %}/>
+	{{ score }}
+      <div id="voteform" {% if not voted %}class="hidden"{% endif %}>
+	<form action="/vote/{{ vote.id }}" method="post">
+	{% csrf_token %}
+	  <input id="hasDoneTheVideo" type="checkbox" name="hasDoneTheVideo" value="True" {% if voted %}checked="checked"{% endif %}/>
 	  <div class="row">
 	    <div class="col-xs-4">
-	      <input id="score_1" type="radio" name="score" value="1"{% if VOTED and VOTED_SCORE == 1 %}checked="checked"{% endif %}/>
+	      <input id="score_1" type="radio" name="score" value="1"{% if voted and score == 1 %}checked="checked"{% endif %}/>
 	      <label for="score_1"><div class="radioPositive">1 分</div></label>
 	    </div>
 	    <div class="col-xs-4">
-	      <input id="score_2" type="radio" name="score" value="2"{% if VOTED and VOTED_SCORE == 2 %}checked="checked"{% endif %}/>
+	      <input id="score_2" type="radio" name="score" value="2"{% if voted and score == 2 %}checked="checked"{% endif %}/>
 	      <label for="score_2"><div class="radioPositive">2 分</div></label>
 	    </div>
 	    <div class="col-xs-4">
-	      <input id="score_3" type="radio" name="score" value="3"{% if VOTED and VOTED_SCORE == 3 %}checked="checked"{% endif %}/>
+	      <input id="score_3" type="radio" name="score" value="3"{% if voted and score == 3 %}checked="checked"{% endif %}/>
 	      <label for="score_3"><div class="radioPositive">3 分</div></label>
 	    </div>
 	  </div>
