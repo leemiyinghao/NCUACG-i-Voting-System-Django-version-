@@ -8,6 +8,8 @@ from django.contrib.auth import authenticate, login, logout as django_logout
 from django.contrib.auth import get_user_model
 from django.shortcuts import render_to_response
 from django.core.urlresolvers import reverse
+from datetime import timedelta
+from django.utils import timezone
 
 #Twitter Login Part
 def twitterAuth(request):
@@ -30,49 +32,14 @@ def twitterCallback(request):
 
 # Write the rest of code here
 def index(request):
-    #check whether session exist
-    try:
-        sid = request.COOKIES['sessionid']
-    except KeyError:
-        return redirect("/twitterlogin/")
-    #check whether has competence
-    try:
-        user=VoteableUser.objects.get(userName=request.session['userName'])
-    except VoteableUser.DoesNotExist:
-        del request.session['requestToken']
-        return redirect("/twitterlogin/")
-    except KeyError:
-        request.session.clear()
-        return redirect("/twitterlogin/")
-    #main
-    try:
-        voteList = VoteList.objects.order_by('-expireDate')
-    except VoteList.DoesNotExist:
-        voteList = None
-    fetchVote = None
-    voted = [False]
-    #check whether voted
-    for vote in voteList:
-        try:
-            fetchVote=FetchVote.objects.filter(userName=request.session['userName']).filter(roomID=vote.id)
-            if fetchVote != None:
-                while True:
-                    try:
-                        voted[vote.id] = True
-                        break
-                    except IndexError:
-                        voted.append(False)                
-        except FetchVote.DoesNotExist:
-            while True:
-                try:
-                    voted[vote.id] = False
-                    break
-                except IndexError:
-                    voted.append(False)       
-        except KeyError:
-            return redirect("/twitterlogin/")
-    context = {'voteList': voteList,'voted': voted}
-    return render(request, 'Vote/index.html', context)
+    userName = request.session.get('userName',None)
+    if userName == None:
+        #TODO: Non-Logged user index page.
+        return HttpResponse("You have not yet login")
+    else:
+        voteList = VoteList.objects.filter(expireDate < (timezone.now() - timedelta(days=3)), '-expireDate')
+        #TODO: Modify index.html template
+        return render(request, "Vote/index.html", {'voteList': voteList, 'userName': userName})
 
 def selectVoteRoom(request,voteID):
     #check whether session exist
@@ -102,7 +69,7 @@ def selectVoteRoom(request,voteID):
         raise Http404('Option not found')
     context = {'vote': vote,'optionList': optionList}
     return render(request, 'Vote/selectVoteRoom.html', context)
-    
+
 def sendVote(request,voteID):
     #check whether session exist
     try:

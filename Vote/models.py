@@ -10,7 +10,7 @@ class VoteList(models.Model):
     describe = models.TextField(max_length=500)
     VOTE_TYPE = (
         ("v", "videoVote"),
-        ("s", "select"),
+        ("s", "selectVote"),
     )
     voteType = models.CharField(max_length=1, choices=VOTE_TYPE)
     pubDate = models.DateTimeField('date published')
@@ -18,6 +18,11 @@ class VoteList(models.Model):
     videoURL = models.URLField()
     maxSelectCount = models.IntegerField(default=1)
     videoLength = models.IntegerField(default=0)
+    def hasUserFetchVote(self, _userName):
+        if self.fetchvote_set.filter(userName = _userName):
+            return True
+        else:
+            return False
     
 class FetchVote(models.Model):
     userName = models.CharField(max_length=50)
