@@ -46,7 +46,7 @@ def voteRoom(request, voteID):
     fetchVote = FetchVote(userName = userName, roomID = vote, fetchDate = timezone.now())
     fetchVote.save()
     if vote.voteType == 'v':
-        score=VoteTicket.objects.filter(userName = userName, roomID = voteID).last().score
+        score = 0 if VoteTicket.objects.filter(userName = userName, roomID = voteID).last()==None else VoteTicket.objects.filter(userName = userName, roomID = voteID).last().score
         return render(request, 'Vote/videoVoteRoom.html', {'vote': vote,'optionList': optionList, 'userName': userName, 'voted': voted, 'score': score})
     else:
         return render(request, 'Vote/selectVoteRoom.html', {'vote': vote,'optionList': optionList, 'userName': userName, 'voted': voted})

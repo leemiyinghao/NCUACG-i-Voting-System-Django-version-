@@ -40,7 +40,6 @@
       <div class="voteroomdescribe">
 	{{ vote.describe }}
       </div>
-	{{ score }}
       <div id="voteform" {% if not voted %}class="hidden"{% endif %}>
 	<form action="/vote/{{ vote.id }}/" method="post">
 	{% csrf_token %}
