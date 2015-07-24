@@ -39,7 +39,7 @@
 	{{ vote.describe }}
       </div>
       <div id="voteform">
-	<form action="/vote/{{ vote.id }}" method="post">
+	<form action="/vote/{{ vote.id }}/" method="post">
 	{% csrf_token %}
 	  <div class="row">
 	    {% for option in optionList %}

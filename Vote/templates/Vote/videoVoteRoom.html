@@ -42,7 +42,7 @@
       </div>
 	{{ score }}
       <div id="voteform" {% if not voted %}class="hidden"{% endif %}>
-	<form action="/vote/{{ vote.id }}" method="post">
+	<form action="/vote/{{ vote.id }}/" method="post">
 	{% csrf_token %}
 	  <input id="hasDoneTheVideo" type="checkbox" name="hasDoneTheVideo" value="True" {% if voted %}checked="checked"{% endif %}/>
 	  <div class="row">
