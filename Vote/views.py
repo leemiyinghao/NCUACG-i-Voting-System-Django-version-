@@ -6,7 +6,7 @@ from django.http import Http404
 from django.conf import settings
 from django.shortcuts import render_to_response, get_object_or_404
 from django.core.urlresolvers import reverse
-from datetime import timedelta
+from datetime import timedelta, datetime
 from django.utils import timezone
 
 #Twitter Login Part
@@ -32,7 +32,8 @@ def index(request):
     elif not VoteableUser.objects.filter(userName = userName).exists():
         return HttpResponse("Permission denied")
     voteList = VoteList.objects.filter(expireDate__gt = (timezone.now() - timedelta(days=3))).order_by('-expireDate')
-    return render(request, "Vote/index.html", {'voteList': voteList, 'userName': userName})
+    today = timezone.now()
+    return render(request, "Vote/index.html", {'voteList': voteList, 'userName': userName, 'today': today})
 
 def voteRoom(request, voteID):
     userName = request.session.get('userName', None)

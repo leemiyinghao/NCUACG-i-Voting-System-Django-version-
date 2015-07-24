@@ -41,8 +41,8 @@
       <div class="row">
 	<div class="col-sm-4">
 	  {% for vote in voteList %}
-	  <div class="votelist{% if vote|hasUserFetchVote:userName %} voted{% elif vote.expireDate < 259200 %} emergency{% endif %}">
-	    <span class="date">{{ vote.pubDate }}</span>
+	  <div class="votelist{% if vote|hasUserFetchVote:userName %} voted{% elif vote.expireDate < 259200 %} emergency{% elif vote.expireDate < today %} expired{% endif %}">
+	    <span class="date">{{ vote.pubDate|date:"o/n/d H:i" }}</span>
 	    <a href="/voteroom/{{ vote.id }}" class="votelink">
 	      <div class="votetitle">
 		{% if vote.voteType == "v" %}
@@ -54,7 +54,7 @@
 	    <div class="votedescribe">
 	      <p>{{ vote.describe }}</p>
 	    </div>
-	    <div class="votecountdown">剩餘 {{ vote.expireDate }} 天</div>
+	    <div class="votecountdown">Remain {{ vote.expireDate|timeuntil }}</div>
 	  </div>
 	{% if forloop.counter|divisibleby:4 == 0 %}
 	</div>
