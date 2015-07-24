@@ -27,7 +27,12 @@
     <div class="navbar navbar-inverse">
 	<div class="container">
 	  <a href="/" class="navbar-brand">NCUACG i-Voting<span style="color: cyan"> FUMITSUKI</span></a>
-          <span class="navbar-right navbar-text">Logged as: <a href="https://twitter.com/{{ userName }}" target="_blank" class="navbar-link">{{ userName }}</a></span>
+          <ul class="nav navbar-nav navbar-right">
+	    <li>
+	    <a href="https://twitter.com/{{ request.session.userName }}" target="_blank" class="navbar-link">Logged as: {{ request.session.userName }}</a>
+	    </li>
+	    <li><a href="/logout/">Logout</a></li>
+	  </ul>
 	</div>
       </div>
     </div>

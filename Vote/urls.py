@@ -23,5 +23,6 @@ urlpatterns = [
     url(r'^voteroom/(?P<voteID>[0-9]+)/', views.voteRoom, name='voteRoom'),
     url(r'^vote/(?P<voteID>[0-9]+)/', views.sendVote, name='sendVote'),
     url(r'^login/$', views.login, name='login'),
+    url(r'^logout/$', views.logout, name='logout'),
     url(r'^$', views.index, name='index'),
 ]

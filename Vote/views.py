@@ -79,3 +79,6 @@ def login(request):
     else:
         request.session['userName'] = None
         return render(request, "Vote/permissionNotAllow.html")
+def logout(request):
+    request.session['userName'] = None
+    return redirect("/")
