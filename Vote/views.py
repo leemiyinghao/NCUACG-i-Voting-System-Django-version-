@@ -50,7 +50,8 @@ def voteRoom(request, voteID):
         score = 0 if VoteTicket.objects.filter(userName = userName, roomID = voteID).last()==None else VoteTicket.objects.filter(userName = userName, roomID = voteID).last().score
         return render(request, 'Vote/videoVoteRoom.html', {'vote': vote,'optionList': optionList, 'userName': userName, 'voted': voted, 'score': score})
     else:
-        return render(request, 'Vote/selectVoteRoom.html', {'vote': vote,'optionList': optionList, 'userName': userName, 'voted': voted})
+        error = request.GET.get('error','')
+        return render(request, 'Vote/selectVoteRoom.html', {'vote': vote,'optionList': optionList, 'userName': userName, 'voted': voted, 'error': error})
 
 def sendVote(request, voteID):
     userName = request.session.get('userName', None)
@@ -66,6 +67,12 @@ def sendVote(request, voteID):
         return redirect("/")
     else:
         optionList = Options.objects.filter(roomID = voteID)
+        optionNum = 0
+        for option in optionList:
+            if request.POST.get("option_%d" % option.id) == 'True':
+                optionNum += 1
+        if optionNum > vote.maxSelectCount:
+            return redirect("/voteroom/%s/?error=toomanyoption" % voteID)
         for option in optionList:
             if request.POST.get("option_%d" % option.id) == 'True':
                 voteTicket = VoteTicket(roomID = vote, userName = userName, optionID = option)

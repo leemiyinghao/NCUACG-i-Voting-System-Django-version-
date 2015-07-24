@@ -37,6 +37,9 @@
       </div>
     </div>
     <div class="container">
+      {% if error == 'toomanyoption' %}
+      <div class="alert alert-danger">最多只能選 {{ vote.maxSelectCount }} 個選項</div>
+      {% endif %}
       <div class="voteroomtitle">{{ vote.title }}</div>
       <div class="voteroomdate">{{ vote.pubDate|date:"o/n/d H:i" }} 至 {{ vote.expireDate|date:"o/n/d H:i" }}</div>
       <div class="voteroommaxselect">最多可選 {{ vote.maxSelectCount }} 個選項</div>
