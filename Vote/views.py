@@ -46,11 +46,11 @@ def voteRoom(request, voteID):
     voted = VoteTicket.objects.filter(userName = userName, roomID = voteID).exists()
     fetchVote = FetchVote(userName = userName, roomID = vote, fetchDate = timezone.now())
     fetchVote.save()
+    error = request.GET.get('error','')
     if vote.voteType == 'v':
         score = 0 if VoteTicket.objects.filter(userName = userName, roomID = voteID).last()==None else VoteTicket.objects.filter(userName = userName, roomID = voteID).last().score
-        return render(request, 'Vote/videoVoteRoom.html', {'vote': vote,'optionList': optionList, 'userName': userName, 'voted': voted, 'score': score})
+        return render(request, 'Vote/videoVoteRoom.html', {'vote': vote,'optionList': optionList, 'userName': userName, 'voted': voted, 'score': score, 'error': error})
     else:
-        error = request.GET.get('error','')
         return render(request, 'Vote/selectVoteRoom.html', {'vote': vote,'optionList': optionList, 'userName': userName, 'voted': voted, 'error': error})
 
 def sendVote(request, voteID):
@@ -62,6 +62,8 @@ def sendVote(request, voteID):
     vote = get_object_or_404(VoteList, pk = voteID)
     if vote.voteType == "v":
         doneVideo = not request.POST.get('hasDoneTheVideo')==None
+        if request.POST.get('score') == None:
+            return redirect("/voteroom/%s/?error=nonescore" % voteID)
         voteTicket = VoteTicket(roomID = vote, userName = userName, score = request.POST.get('score'), doneVideo = doneVideo)
         voteTicket.save()
         return redirect("/")

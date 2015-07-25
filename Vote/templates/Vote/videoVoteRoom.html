@@ -37,6 +37,9 @@
       </div>
     </div>
     <div class="container">
+      {% if error == 'nonescore' %}
+      <div class="alert alert-danger">請先決定分數後再送出</div>
+      {% endif %}
       <div id="videoplayer">
 	<video id="votevideo" src="{{ vote.videoURL }}" controls="controls"></video>
       </div>
