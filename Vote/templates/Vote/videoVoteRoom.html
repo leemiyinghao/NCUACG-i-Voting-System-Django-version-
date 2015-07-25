@@ -40,6 +40,9 @@
       {% if error == 'nonescore' %}
       <div class="alert alert-danger">請先決定分數後再送出</div>
       {% endif %}
+      {% if not voted %}
+      <div class="alert alert-info"><b>注意</b> 影片觀看完畢後才會出現分數選項</div>
+      {% endif %}
       <div id="videoplayer">
 	<video id="votevideo" src="{{ vote.videoURL }}" controls="controls"></video>
       </div>
