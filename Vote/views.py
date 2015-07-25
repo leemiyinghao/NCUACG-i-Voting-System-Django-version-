@@ -12,7 +12,7 @@ from django.utils import timezone
 #Twitter Login Part
 def twitterAuth(request):
     twitter = Twython(settings.TWITTER_KEY, settings.TWITTER_SECRET)
-    authProps = twitter.get_authentication_tokens(callback_url='http://127.0.0.1:8000/twitterlogin/callback')
+    authProps = twitter.get_authentication_tokens()
     request.session['requestToken'] = authProps
     return redirect(authProps['auth_url'])
 
@@ -69,16 +69,21 @@ def sendVote(request, voteID):
         return redirect("/")
     else:
         optionList = Options.objects.filter(roomID = voteID)
-        optionNum = 0
-        for option in optionList:
-            if request.POST.get("option_%d" % option.id) == 'True':
-                optionNum += 1
-        if optionNum > vote.maxSelectCount:
-            return redirect("/voteroom/%s/?error=toomanyoption" % voteID)
-        for option in optionList:
-            if request.POST.get("option_%d" % option.id) == 'True':
-                voteTicket = VoteTicket(roomID = vote, userName = userName, optionID = option)
-                voteTicket.save()
+        if vote.maxSelectCount > 1:
+            optionNum = 0
+            for option in optionList:
+                if request.POST.get("option_%d" % option.id) == 'True':
+                    optionNum += 1
+            if optionNum > vote.maxSelectCount:
+                return redirect("/voteroom/%s/?error=toomanyoption" % voteID)
+            for option in optionList:
+                if request.POST.get("option_%d" % option.id) == 'True':
+                    voteTicket = VoteTicket(roomID = vote, userName = userName, optionID = option)
+                    voteTicket.save()
+        elif not request.POST.get('option') == None:
+            option = get_object_or_404(Options, pk=request.POST.get('option'))
+            voteTicket = VoteTicket(roomID = vote, userName = userName, optionID = option)
+            voteTicket.save()
         return redirect("/")
 def login(request):
     userName = request.session.get('userName', None)

@@ -52,7 +52,11 @@
 	  <div class="row">
 	    {% for option in optionList %}
 	    <div class="col-sm-6">
-	      <input id="option_{{ option.id }}" type="{% if vote.maxSelectCount == 1 %}radio{% else %}checkbox{% endif %}" name="option_{{ option.id }}" value="True"{% if voted and userName|hasSelectOption:option.id %} checked="checked"{% endif %}/>
+	      {% if vote.maxSelectCount == 1 %}
+	      <input id="option_{{ option.id }}" type="radio" name="option" value="{{option.id}}"{% if voted and userName|hasSelectOption:option.id %} checked="checked"{% endif %}/>
+	      {% else %}
+	      <input id="option_{{ option.id }}" type="checkbox" name="option_{{ option.id }}" value="True"{% if voted and userName|hasSelectOption:option.id %} checked="checked"{% endif %}/>
+	      {% endif %}
 	      <label for="option_{{ option.id }}"><div class="radioPositive">{{ option.text }}</div></label>
 	    </div>
 	  {% if forloop.counter|divisibleby:2 %}
