@@ -62,6 +62,8 @@ def sendVote(request, voteID):
     vote = get_object_or_404(VoteList, pk = voteID)
     if vote.voteType == "v":
         doneVideo = not request.POST.get('hasDoneTheVideo')==None
+        fetchVote = FetchVote.objects.filter(userName = userName, roomID = vote.id).last()
+        doneVideo = False if (fetchVote.fetchDate + timedelta(vote.videoLength)) > timezone.now() else doneVideo
         if request.POST.get('score') == None:
             return redirect("/voteroom/%s/?error=nonescore" % voteID)
         VoteTicket.objects.filter(userName=userName, roomID=vote.id).update(mute=True)
