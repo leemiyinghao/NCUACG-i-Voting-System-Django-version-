@@ -18,7 +18,7 @@ class VoteList(models.Model):
     voteType = models.CharField(max_length=1, choices=VOTE_TYPE)
     pubDate = models.DateTimeField('date published')
     expireDate = models.DateTimeField('date expire')
-    videoURL = models.URLField()
+    videoURL = models.URLField(null=True)
     maxSelectCount = models.IntegerField(default=1)
     videoLength = models.IntegerField(default=0)
     def hasUserFetchVote(self, _userName):
@@ -39,6 +39,8 @@ class FetchVote(models.Model):
 class Options(models.Model):
     roomID = models.ForeignKey(VoteList)
     text = models.TextField(max_length=500)
+    def hasUserVoteThisOption(self, _userName):
+        return True if self.voteticket_set.filter(mute=False, userName=_userName) else False
     def __unicode__(self):
         return self.text
 
@@ -48,5 +50,6 @@ class VoteTicket(models.Model):
     score = models.IntegerField(default=0)
     optionID = models.ForeignKey(Options, null=True)
     doneVideo = models.BooleanField(default=False)
+    mute = models.BooleanField(default=False)
     def __unicode__(self):
         return self.roomID.title
