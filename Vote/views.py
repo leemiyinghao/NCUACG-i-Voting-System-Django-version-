@@ -79,9 +79,9 @@ def sendVote(request, voteID):
                     optionNum += 1
             if optionNum > vote.maxSelectCount:
                 return redirect("/voteroom/%s/?error=toomanyoption" % voteID)
+            VoteTicket.objects.filter(userName=userName, roomID=vote.id).update(mute=True)
             for option in optionList:
                 if request.POST.get("option_%d" % option.id) == 'True':
-                    VoteTicket.objects.filter(userName=userName, roomID=vote.id).update(mute=True)
                     voteTicket = VoteTicket(roomID = vote, userName = userName, optionID = option)
                     voteTicket.save()
         elif not request.POST.get('option') == None:
