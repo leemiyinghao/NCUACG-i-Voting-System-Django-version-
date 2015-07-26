@@ -7,5 +7,5 @@ def hasUserFetchVote(vote, userName):
     return vote.hasUserFetchVote(userName)
 
 @register.filter
-def hasSelectOption(userName, optionID):
-    return VoteTicket.objects.filter(userName=userName, optionID = optionID).exists()
+def hasUserVoteThisOption(userName, option):
+    return option.hasUserVoteThisOption(userName)

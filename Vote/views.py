@@ -64,6 +64,7 @@ def sendVote(request, voteID):
         doneVideo = not request.POST.get('hasDoneTheVideo')==None
         if request.POST.get('score') == None:
             return redirect("/voteroom/%s/?error=nonescore" % voteID)
+        VoteTicket.objects.filter(userName=userName, roomID=vote.id).update(mute=True)
         voteTicket = VoteTicket(roomID = vote, userName = userName, score = request.POST.get('score'), doneVideo = doneVideo)
         voteTicket.save()
         return redirect("/")
@@ -78,10 +79,12 @@ def sendVote(request, voteID):
                 return redirect("/voteroom/%s/?error=toomanyoption" % voteID)
             for option in optionList:
                 if request.POST.get("option_%d" % option.id) == 'True':
+                    VoteTicket.objects.filter(userName=userName, roomID=vote.id).update(mute=True)
                     voteTicket = VoteTicket(roomID = vote, userName = userName, optionID = option)
                     voteTicket.save()
         elif not request.POST.get('option') == None:
             option = get_object_or_404(Options, pk=request.POST.get('option'))
+            VoteTicket.objects.filter(userName=userName, roomID=vote.id).update(mute=True)
             voteTicket = VoteTicket(roomID = vote, userName = userName, optionID = option)
             voteTicket.save()
         return redirect("/")

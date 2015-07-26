@@ -53,9 +53,9 @@
 	    {% for option in optionList %}
 	    <div class="col-sm-6">
 	      {% if vote.maxSelectCount == 1 %}
-	      <input id="option_{{ option.id }}" type="radio" name="option" value="{{option.id}}"{% if voted and userName|hasSelectOption:option.id %} checked="checked"{% endif %}/>
+	      <input id="option_{{ option.id }}" type="radio" name="option" value="{{option.id}}"{% if voted and userName|hasUserVoteThisOption:option %} checked="checked"{% endif %}/>
 	      {% else %}
-	      <input id="option_{{ option.id }}" type="checkbox" name="option_{{ option.id }}" value="True"{% if voted and userName|hasSelectOption:option.id %} checked="checked"{% endif %}/>
+	      <input id="option_{{ option.id }}" type="checkbox" name="option_{{ option.id }}" value="True"{% if voted and userName|hasUserVoteThisOption:option %} checked="checked"{% endif %}/>
 	      {% endif %}
 	      <label for="option_{{ option.id }}"><div class="radioPositive">{{ option.text }}</div></label>
 	    </div>
