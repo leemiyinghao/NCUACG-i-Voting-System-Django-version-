@@ -2,8 +2,29 @@ from django.contrib import admin
 from .models import VoteList, VoteableUser, FetchVote, VoteTicket, Options
 # Register your models here.
 
-admin.site.register(VoteList)
-admin.site.register(VoteableUser)
-admin.site.register(FetchVote)
-admin.site.register(VoteTicket)
-admin.site.register(Options)
+class EditOptions(admin.TabularInline):
+    model = Options
+    extra = 3
+@admin.register(VoteList)
+class ManageVoteList(admin.ModelAdmin):
+    fieldsets = [
+        (None, {'fields': ['title', 'describe', 'voteType']}),
+        ('date_option', {'fields': ['pubDate', 'expireDate']}),
+        ('select_vote_config', {'fields': ['maxSelectCount']}),
+        ('video_vote_config', {'fields': ['videoURL','videoLength']}),
+    ]
+    inlines = [EditOptions]
+    vote_title = 'title'
+    date_publish = 'pubDate'
+    
+@admin.register(VoteableUser)
+class ManageVoteableUser(admin.ModelAdmin):
+    list_display = ('id', 'userName', 'nickName')
+@admin.register(FetchVote)
+class ViewFetchVote(admin.ModelAdmin):
+    list_display = ('userName', 'roomID', 'fetchDate')
+    readonly_fields = ('userName', 'roomID', 'fetchDate')
+@admin.register(VoteTicket)
+class ViewVoteTicket(admin.ModelAdmin):
+    list_display = ('roomID', 'roomVoteType', 'option_or_score', 'userName', 'doneVideo')
+    readonly_fields = ('roomID', 'roomVoteType', 'option_or_score', 'userName', 'doneVideo')
