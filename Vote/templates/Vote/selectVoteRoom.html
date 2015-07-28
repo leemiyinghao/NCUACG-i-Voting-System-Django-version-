@@ -44,7 +44,7 @@
       <div class="voteroomdate">{{ vote.pubDate|date:"o/n/d H:i" }} 至 {{ vote.expireDate|date:"o/n/d H:i" }}</div>
       <div class="voteroommaxselect">最多可選 {{ vote.maxSelectCount }} 個選項</div>
       <div class="voteroomdescribe">
-	{{ vote.describe }}
+	{{ vote.describe|linebreaksbr }}
       </div>
       <div id="voteform">
 	<form action="/vote/{{ vote.id }}/" method="post">

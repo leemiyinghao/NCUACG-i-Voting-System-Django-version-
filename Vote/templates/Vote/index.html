@@ -55,7 +55,7 @@
 	      </div>
 	    </a>
 	    <div class="votedescribe">
-	      <p>{{ vote.describe }}</p>
+	      <p>{{ vote.describe|truncatechars:80|linebreaksbr }}</p>
 	    </div>
 	    <div class="votecountdown">Remain {{ vote.expireDate|timeuntil }}</div>
 	  </div>
