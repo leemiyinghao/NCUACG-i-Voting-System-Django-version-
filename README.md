@@ -1,6 +1,7 @@
 # NCUACG i-Voting System
 
 *Current Release: FUMITSUKI*
+
 *This project release with WTFPL v2*
 
 This is a work by NCUACG(http://ncuacg.pixnet.net) as a vote system.
