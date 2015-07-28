@@ -37,6 +37,9 @@
       </div>
     </div>
     <div class="container">
+      {% if finish != None %}
+      <div class="alert alert-success">成功完成 {{ finish.title }} 的投票</div>
+      {% endif %}
       {% if voteList.count > 0 %}
       <div class="row">
 	{% for vote in voteList %}
