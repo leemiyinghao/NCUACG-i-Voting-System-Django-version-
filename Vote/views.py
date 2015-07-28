@@ -24,7 +24,6 @@ def twitterCallback(request):
     request.session['userName'] = authorizedTokens['screen_name']
     return redirect("/login/")
 
-# Write the rest of code here
 def index(request):
     userName = request.session.get('userName',None)
     if userName == None:
@@ -34,8 +33,8 @@ def index(request):
     voteList = VoteList.objects.filter(expireDate__gt = (timezone.now() - timedelta(days=3))).order_by('-expireDate')
     today = timezone.now()
     finish = VoteList.objects.filter(pk=request.GET.get('finish')).first() if request.GET.get('finish') else None
-
-    return render(request, "Vote/index.html", {'voteList': voteList, 'userName': userName, 'today': today, 'finish': finish})
+    error = request.GET.get('error')
+    return render(request, "Vote/index.html", {'voteList': voteList, 'userName': userName, 'today': today, 'finish': finish, 'error': error})
 
 def voteRoom(request, voteID):
     userName = request.session.get('userName', None)
@@ -62,6 +61,8 @@ def sendVote(request, voteID):
     elif not VoteableUser.objects.filter(userName = userName).exists():
         return redirect("/")
     vote = get_object_or_404(VoteList, pk = voteID)
+    if vote.expireDate < timezone.now():
+        return redirect("/?error=overtimevote")
     if vote.voteType == "v":
         doneVideo = not request.POST.get('hasDoneTheVideo')==None
         fetchVote = FetchVote.objects.filter(userName = userName, roomID = vote.id).last()
