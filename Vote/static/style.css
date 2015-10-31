@@ -1,5 +1,13 @@
-.clearboth{
+html, body{
+    height: 100%;
+}
+.wrapper{
+    min-height: 100%;
+    position: relative;
+}
+.clearboth, .clear{
     clear: both;
+    height: 30px;
 }
 .navbar-right li{
     float: right;
@@ -145,4 +153,6 @@
     text-align: center;
     width: 100%;
     Background: #393939;
+    bottom: 0px;
+    position: absolute;
 }
