@@ -8,7 +8,7 @@ class EditOptions(admin.TabularInline):
 @admin.register(VoteList)
 class ManageVoteList(admin.ModelAdmin):
     fieldsets = [
-        (None, {'fields': ['title', 'describe', 'voteType']}),
+        (None, {'fields': ['title', 'hashSetKey', 'describe', 'voteType']}),
         ('date_option', {'fields': ['pubDate', 'expireDate']}),
         ('select_vote_config', {'fields': ['maxSelectCount']}),
         ('video_vote_config', {'fields': ['videoURL','videoLength']}),
@@ -26,5 +26,5 @@ class ViewFetchVote(admin.ModelAdmin):
     readonly_fields = ('userName', 'roomID', 'fetchDate')
 @admin.register(VoteTicket)
 class ViewVoteTicket(admin.ModelAdmin):
-    list_display = ('roomID', 'roomVoteType', 'option_or_score', 'userName', 'doneVideo')
-    readonly_fields = ('roomID', 'roomVoteType', 'option_or_score', 'userName', 'doneVideo')
+    list_display = ('roomID', 'roomVoteType', 'option_or_score', 'hashUserName', 'doneVideo')
+    readonly_fields = ('roomID', 'roomVoteType', 'option_or_score', 'hashUserName', 'doneVideo')

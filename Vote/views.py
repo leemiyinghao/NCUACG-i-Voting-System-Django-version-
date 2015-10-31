@@ -8,7 +8,7 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.core.urlresolvers import reverse
 from datetime import timedelta, datetime
 from django.utils import timezone
-
+import hashlib
 #Twitter Login Part
 def twitterAuth(request):
     twitter = Twython(settings.TWITTER_KEY, settings.TWITTER_SECRET)
@@ -61,6 +61,9 @@ def sendVote(request, voteID):
     elif not VoteableUser.objects.filter(userName = userName).exists():
         return redirect("/")
     vote = get_object_or_404(VoteList, pk = voteID)
+    sha1 = hashlib.sha1()
+    sha1.update(userName + "." + vote.hashSetKey)
+    hashId = sha1.hexdigest()[:10]
     if vote.expireDate < timezone.now():
         return redirect("/?error=overtimevote")
     if vote.voteType == "v":
@@ -70,7 +73,7 @@ def sendVote(request, voteID):
         if request.POST.get('score') == None:
             return redirect("/voteroom/%s/?error=nonescore" % voteID)
         VoteTicket.objects.filter(userName=userName, roomID=vote.id).update(mute=True)
-        voteTicket = VoteTicket(roomID = vote, userName = userName, score = request.POST.get('score'), doneVideo = doneVideo)
+        voteTicket = VoteTicket(roomID = vote, userName = userName, score = request.POST.get('score'), doneVideo = doneVideo, hashUserName = hashId)
         voteTicket.save()
         return redirect("/?finish=%s" % voteID)
     else:
@@ -85,12 +88,12 @@ def sendVote(request, voteID):
             VoteTicket.objects.filter(userName=userName, roomID=vote.id).update(mute=True)
             for option in optionList:
                 if request.POST.get("option_%d" % option.id) == 'True':
-                    voteTicket = VoteTicket(roomID = vote, userName = userName, optionID = option)
+                    voteTicket = VoteTicket(roomID = vote, userName = userName, optionID = option, hashUserName = hashId)
                     voteTicket.save()
         elif not request.POST.get('option') == None:
             option = get_object_or_404(Options, pk=request.POST.get('option'))
             VoteTicket.objects.filter(userName=userName, roomID=vote.id).update(mute=True)
-            voteTicket = VoteTicket(roomID = vote, userName = userName, optionID = option)
+            voteTicket = VoteTicket(roomID = vote, userName = userName, optionID = option, hashUserName = hashId)
             voteTicket.save()
         return redirect("/?finish=%s" % voteID)
 def login(request):

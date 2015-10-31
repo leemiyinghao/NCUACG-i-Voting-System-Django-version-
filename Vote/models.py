@@ -26,6 +26,7 @@ class VoteList(models.Model):
     videoURL = models.URLField(null=True, verbose_name='video URL')
     maxSelectCount = models.IntegerField(default=1, verbose_name='max selection')
     videoLength = models.IntegerField(default=0, verbose_name='video length')
+    hashSetKey = models.CharField(default='7505d64a54e061b7acd5', max_length=50, verbose_name='set key')
     def hasUserFetchVote(self, _userName):
         if self.fetchvote_set.filter(userName = _userName).count() > 0:
             return True
@@ -56,6 +57,7 @@ class VoteTicket(models.Model):
     optionID = models.ForeignKey(Options, null=True)
     doneVideo = models.BooleanField(default=False, verbose_name='has user done the video?')
     mute = models.BooleanField(default=False, verbose_name='mute')
+    hashUserName = models.CharField(default='7505d64a54e061b7acd5', max_length=20, verbose_name='hash id')
     def __unicode__(self):
         return self.roomID.title
     def roomVoteType(self):
