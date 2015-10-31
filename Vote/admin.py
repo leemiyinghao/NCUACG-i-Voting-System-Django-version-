@@ -14,8 +14,9 @@ class ManageVoteList(admin.ModelAdmin):
         ('video_vote_config', {'fields': ['videoURL','videoLength']}),
     ]
     inlines = [EditOptions]
-    list_display = ('id', 'title', 'voteType', 'pubDate', 'expireDate')
-    readonly_fields = ('pubDate', )
+    vote_title = 'title'
+    date_publish = 'pubDate'
+    
 @admin.register(VoteableUser)
 class ManageVoteableUser(admin.ModelAdmin):
     list_display = ('id', 'userName', 'nickName')

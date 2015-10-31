@@ -3,7 +3,7 @@ from django.utils import timezone
 from datetime import timedelta
 
 class VoteableUser(models.Model):
-    class Meta:
+    class Meta():
         verbose_name = 'voteable user'
         verbose_name_plural = 'voteable user list'
     userName = models.CharField(max_length=50, verbose_name='user name')
@@ -14,9 +14,6 @@ class VoteableUser(models.Model):
         return self.nickName
 
 class VoteList(models.Model):
-    class Meta:
-        verbose_name = 'vote'
-        verbose_name_plural = 'vote list'
     title = models.CharField(max_length=50, verbose_name='vote title')
     describe = models.TextField(max_length=500, verbose_name='vote describe')
     VOTE_TYPE = (
@@ -38,10 +35,6 @@ class VoteList(models.Model):
         return self.title
 
 class FetchVote(models.Model):
-    class Meta:
-        verbose_name = 'fetch vote record'
-        verbose_name_plural = 'fetch vote records'
-        permissions = (("CAN_VIEW_FETCH_VOTE", "Can view fetch vote record"),)
     userName = models.CharField(max_length=50, verbose_name='user name')
     roomID = models.ForeignKey(VoteList)
     fetchDate = models.DateTimeField(verbose_name='fetch datetime')
@@ -57,10 +50,6 @@ class Options(models.Model):
         return self.text
 
 class VoteTicket(models.Model):
-    class Meta:
-        verbose_name = 'vote record'
-        verbose_name_plural = 'vote records'
-        permissions = (("CAN_VIEW_VOTE_TICKET", "Can view vote record"),)
     roomID = models.ForeignKey(VoteList)
     userName = models.CharField(max_length=50, verbose_name='user name')
     score = models.IntegerField(default=0)
