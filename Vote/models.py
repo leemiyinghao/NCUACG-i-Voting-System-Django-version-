@@ -23,7 +23,7 @@ class VoteList(models.Model):
     voteType = models.CharField(max_length=1, choices=VOTE_TYPE, verbose_name='vote type')
     pubDate = models.DateTimeField(default = timezone.now(), verbose_name='publish date')
     expireDate = models.DateTimeField(default = timezone.now() + timedelta(days = 3), verbose_name='expire date')
-    videoURL = models.URLField(null=True, verbose_name='video URL')
+    videoFile = models.FileField(default='settings.MEDIA_ROOT/logos/anonymous.jpg', null=True, verbose_name='video file')
     maxSelectCount = models.IntegerField(default=1, verbose_name='max selection')
     videoLength = models.IntegerField(default=0, verbose_name='video length')
     hashSetKey = models.CharField(default='7505d64a54e061b7acd5', max_length=50, verbose_name='set key')

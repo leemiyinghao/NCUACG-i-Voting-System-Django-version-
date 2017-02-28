@@ -50,7 +50,7 @@
       <div class="voteroomtitle">{{ vote.title }}</div>
       <div class="voteroomdate">{{ vote.pubDate|date:"o/n/d H:i" }} 至 {{ vote.pubDate|date:"o/n/d H:i" }}</div>
       <div class="voteroomdescribe">
-	{{ vote.describe }}
+	{{ vote.describe|linebreaksbr }}
       </div>
       <div id="voteform" {% if not voted %}class="hidden"{% endif %}>
 	<form action="/vote/{{ vote.id }}/" method="post">
