@@ -93,3 +93,6 @@ ENV/
 
 #emacs
 *~
+
+NCUACG_ivot/settings.py
+settings.py

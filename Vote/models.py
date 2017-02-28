@@ -26,7 +26,7 @@ class VoteList(models.Model):
     videoFile = models.FileField(default='settings.MEDIA_ROOT/logos/anonymous.jpg', null=True, verbose_name='video file')
     maxSelectCount = models.IntegerField(default=1, verbose_name='max selection')
     videoLength = models.IntegerField(default=0, verbose_name='video length')
-    hashSetKey = models.CharField(default='7505d64a54e061b7acd5', max_length=50, verbose_name='set key')
+    hashSetKey = models.CharField(default='NCUACG', max_length=50, verbose_name='set key')
     def hasUserFetchVote(self, _userName):
         if self.fetchvote_set.filter(userName = _userName).count() > 0:
             return True
@@ -52,7 +52,6 @@ class Options(models.Model):
 
 class VoteTicket(models.Model):
     roomID = models.ForeignKey(VoteList)
-    userName = models.CharField(max_length=50, verbose_name='user name')
     score = models.IntegerField(default=0)
     optionID = models.ForeignKey(Options, null=True)
     doneVideo = models.BooleanField(default=False, verbose_name='has user done the video?')

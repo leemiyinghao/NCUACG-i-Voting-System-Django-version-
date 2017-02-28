@@ -43,13 +43,16 @@ def voteRoom(request, voteID):
     elif not VoteableUser.objects.filter(userName = userName).exists():
         return redirect("/")
     vote = get_object_or_404(VoteList, pk = voteID)
+    sha1 = hashlib.sha1()
+    sha1.update((userName + "." + vote.hashSetKey).encode('utf-8'))
+    hashId = sha1.hexdigest()[:10]
     optionList = Options.objects.filter(roomID = voteID)
-    voted = VoteTicket.objects.filter(userName = userName, roomID = voteID).exists()
+    voted = VoteTicket.objects.filter(hashUserName = hashId, roomID = voteID).exists()
     fetchVote = FetchVote(userName = userName, roomID = vote, fetchDate = timezone.now())
     fetchVote.save()
     error = request.GET.get('error','')
     if vote.voteType == 'v':
-        score = 0 if VoteTicket.objects.filter(userName = userName, roomID = voteID).last()==None else VoteTicket.objects.filter(userName = userName, roomID = voteID).last().score
+        score = 0 if VoteTicket.objects.filter(hashUserName = hashId, roomID = voteID).last()==None else VoteTicket.objects.filter(hashUserName = hashId, roomID = voteID).last().score
         return render(request, 'Vote/videoVoteRoom.html', {'vote': vote,'optionList': optionList, 'userName': userName, 'voted': voted, 'score': score, 'error': error})
     else:
         return render(request, 'Vote/selectVoteRoom.html', {'vote': vote,'optionList': optionList, 'userName': userName, 'voted': voted, 'error': error})
@@ -62,7 +65,7 @@ def sendVote(request, voteID):
         return redirect("/")
     vote = get_object_or_404(VoteList, pk = voteID)
     sha1 = hashlib.sha1()
-    sha1.update(userName + "." + vote.hashSetKey)
+    sha1.update((userName + "." + vote.hashSetKey).encode('utf-8'))
     hashId = sha1.hexdigest()[:10]
     if vote.expireDate < timezone.now():
         return redirect("/?error=overtimevote")
@@ -72,8 +75,8 @@ def sendVote(request, voteID):
         doneVideo = False if (fetchVote.fetchDate + timedelta(vote.videoLength)) > timezone.now() else doneVideo
         if request.POST.get('score') == None:
             return redirect("/voteroom/%s/?error=nonescore" % voteID)
-        VoteTicket.objects.filter(userName=userName, roomID=vote.id).update(mute=True)
-        voteTicket = VoteTicket(roomID = vote, userName = userName, score = request.POST.get('score'), doneVideo = doneVideo, hashUserName = hashId)
+        VoteTicket.objects.filter(hashUserName = hashId, roomID=vote.id).update(mute=True)
+        voteTicket = VoteTicket(roomID = vote, score = request.POST.get('score'), doneVideo = doneVideo, hashUserName = hashId)
         voteTicket.save()
         return redirect("/?finish=%s" % voteID)
     else:

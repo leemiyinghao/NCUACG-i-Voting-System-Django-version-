@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>{{ VOTE_TITLE }} - NCUACG i-Voting System FUMITSUKI</title>
+    <title>{{ vote.title }} - NCUACG i-Voting System MATSUKAZE</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="description" content="" />
@@ -27,7 +27,7 @@
     <div class="page-container">
     <div class="navbar navbar-inverse">
 	<div class="container">
-	  <a href="/" class="navbar-brand">NCUACG i-Voting<span style="color: cyan"> FUMITSUKI</span></a>
+	  <a href="/" class="navbar-brand">NCUACG i-Voting<span style="color: #6b8e20"> MATSUKAZE</span></a>
           <ul class="nav navbar-nav navbar-right">
 	    <li>
 	    <a href="https://twitter.com/{{ request.session.userName }}" target="_blank" class="navbar-link">Logged as: {{ request.session.userName }}</a>
@@ -45,7 +45,7 @@
       <div class="alert alert-info"><b>注意</b> 影片觀看完畢後才會出現分數選項</div>
       {% endif %}
       <div id="videoplayer">
-	<video id="votevideo" src="{{ vote.videoURL }}" controls="controls"></video>
+	<video id="votevideo" src="{{ vote.videoFile.url }}" controls="controls"></video>
       </div>
       <div class="voteroomtitle">{{ vote.title }}</div>
       <div class="voteroomdate">{{ vote.pubDate|date:"o/n/d H:i" }} 至 {{ vote.pubDate|date:"o/n/d H:i" }}</div>
