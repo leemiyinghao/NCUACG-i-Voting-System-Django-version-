@@ -111,3 +111,58 @@ def login(request):
 def logout(request):
     request.session['userName'] = None
     return redirect("/")
+
+class Invoice(object):
+    def __init__(self, hashSetKey):
+        self.voteList = VoteList.objects.filter(hashSetKey = hashSetKey).order_by('pubDate')
+        self.date = self.voteList[0].pubDate
+        self.title = hashSetKey
+def invoiceList(request):
+    invoices = []
+    for voteSet in VoteList.objects.values('hashSetKey').distinct():
+        hashSetKey = voteSet['hashSetKey']
+        invoices.append(Invoice(hashSetKey))
+    return render(request, "Invoice/invoiceList.html", {'title': '票數統計',
+                                                        'invoices': invoices})
+def invoice(request, hashSetKey):
+    votes = VoteList.objects.filter(hashSetKey=hashSetKey)
+    voteTitles = [vote.title for vote in votes]
+    voteTickets = VoteTicket.objects.filter(roomID__in=votes, mute=False)
+    users = [i['hashUserName'] for i in voteTickets.values('hashUserName').distinct()]
+    oriVoteSta = {}
+    for user in users:
+        temp = {}
+        for voteTicket in VoteTicket.objects.filter(hashUserName = user):
+            temp[voteTicket.roomID.title] = int(voteTicket.score)
+        oriVoteSta[user] = temp
+    normVoteSta = {}
+    for user in users:
+        normVoteSta[user] = {}
+        sum = 0
+        count = 0
+        for voteTitle in oriVoteSta[user]:
+            sum += oriVoteSta[user][voteTitle]
+            count += 1
+        factor = 2*count/sum
+        for voteTitle in oriVoteSta[user]:
+            normVoteSta[user][voteTitle] = oriVoteSta[user][voteTitle] * factor
+    oriVoteTable = []
+    normVoteTable = []
+    for user in users:
+        oriTemp = [user]
+        normTemp = [user]
+        for voteTitle in voteTitles:
+            if voteTitle in oriVoteSta[user]:
+                oriTemp.append("{:.5f}".format(oriVoteSta[user][voteTitle]))
+                normTemp.append("{:.5f}".format(normVoteSta[user][voteTitle]))
+            else:
+                oriTemp.append('')
+                normTemp.append('')
+        oriVoteTable.append(oriTemp)
+        normVoteTable.append(normTemp)
+    fetchUsers = [fetch['userName'] for fetch in FetchVote.objects.filter(roomID__in=votes).values('userName').distinct()]
+    return render(request, "Invoice/invoice.html", {'title': hashSetKey,
+                                                    'oriVoteTable': oriVoteTable,
+                                                    'normVoteTable': normVoteTable,
+                                                    'voteTitleTable': voteTitles,
+                                                    'fetchUsers': fetchUsers})

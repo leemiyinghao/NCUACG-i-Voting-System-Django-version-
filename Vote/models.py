@@ -12,6 +12,8 @@ class VoteableUser(models.Model):
 
     def __unicode__(self):
         return self.nickName
+    def __str__(self):
+        return self.nickName
 
 class VoteList(models.Model):
     title = models.CharField(max_length=50, verbose_name='vote title')
@@ -34,12 +36,16 @@ class VoteList(models.Model):
             return False
     def __unicode__(self):
         return self.title
+    def __str__(self):
+        return self.title
 
 class FetchVote(models.Model):
     userName = models.CharField(max_length=50, verbose_name='user name')
     roomID = models.ForeignKey(VoteList)
     fetchDate = models.DateTimeField(verbose_name='fetch datetime')
     def __unicode__(self):
+        return self.userName
+    def __str__(self):
         return self.userName
 
 class Options(models.Model):
@@ -48,6 +54,8 @@ class Options(models.Model):
     def hasUserVoteThisOption(self, _userName):
         return True if self.voteticket_set.filter(mute=False, userName=_userName) else False
     def __unicode__(self):
+        return self.text
+    def __str__(self):
         return self.text
 
 class VoteTicket(models.Model):
@@ -58,6 +66,8 @@ class VoteTicket(models.Model):
     mute = models.BooleanField(default=False, verbose_name='mute')
     hashUserName = models.CharField(default='7505d64a54e061b7acd5', max_length=20, verbose_name='hash id')
     def __unicode__(self):
+        return self.roomID.title
+    def __str__(self):
         return self.roomID.title
     def roomVoteType(self):
         return 'Video Vote' if self.roomID.voteType == 'v' else 'Select Vote'

@@ -15,8 +15,15 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
+from adminplus.sites import AdminSitePlus
+from Vote.views import invoice
+admin.site = AdminSitePlus()
+admin.sites.site = admin.site
+admin.autodiscover()
+
 
 urlpatterns = [
+    url(r'^admin/invoice/([^/]+)/?', invoice),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^', include('Vote.urls')),
 ]

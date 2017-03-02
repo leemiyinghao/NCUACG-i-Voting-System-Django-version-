@@ -1,0 +1,64 @@
+{% extends 'adminplus/base.html' %}
+<h1>Invoices</h1>
+{% block content %}
+{# list invoices #}
+<div class="result">
+  <h2>原始分數</h2>
+  <table class="result_list">
+    <thead>
+      <tr>
+	<th></th>
+	{% for voteTitle in voteTitleTable %}
+	<th>{{voteTitle}}</th>
+	{% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in oriVoteTable %}
+      <tr>
+	<th>{{ row|first }}</th>
+	{% for score in row|slice:"1:" %}
+	<td>{{ score }}</td>
+	{% endfor %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <h2>標準化分數</h2>
+  <table class="result_list">
+    <thead>
+      <tr>
+	<th></th>
+	{% for voteTitle in voteTitleTable %}
+	<th>{{voteTitle}}</th>
+	{% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in normVoteTable %}
+      <tr>
+	<th>{{ row|first }}</th>
+	{% for score in row|slice:"1:" %}
+	<td>{{ score }}</td>
+	{% endfor %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <h2>參與使用者</h2>
+  <table class="result_list">
+    <thead>
+      <tr>
+	<th>username</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for user in fetchUsers %}
+      <tr>
+	<td>{{ user }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

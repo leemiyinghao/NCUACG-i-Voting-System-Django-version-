@@ -1,0 +1,27 @@
+{% extends 'adminplus/base.html' %}
+<h1>Invoices</h1>
+{% block content %}
+{# list invoices #}
+<div class="result">
+  <table class="result_list">
+    <thead>
+      <tr>
+	<th>Hash Set Key</th>
+	<th>Create Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+	{% for invoice in invoices %}
+	<td>
+	  <a href="{% url 'admin:index' %}invoice/{{ invoice.title }}/">{{ invoice.title }}</a>
+	</td>
+	<td>
+	  {{ invoice.date }}
+	</td>
+	{% endfor %}
+      </tr>
+    </tbody>
+  </table>
+</div>
+{% endblock %}

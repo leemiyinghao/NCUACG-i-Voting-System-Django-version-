@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import VoteList, VoteableUser, FetchVote, VoteTicket, Options
+from .views import invoiceList
 # Register your models here.
 
 class EditOptions(admin.TabularInline):
@@ -28,3 +29,5 @@ class ViewFetchVote(admin.ModelAdmin):
 class ViewVoteTicket(admin.ModelAdmin):
     list_display = ('roomID', 'roomVoteType', 'option_or_score', 'hashUserName', 'doneVideo')
     readonly_fields = ('roomID', 'roomVoteType', 'option_or_score', 'hashUserName', 'doneVideo')
+
+admin.site.register_view('invoiceList', view=invoiceList)
