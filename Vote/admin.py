@@ -12,7 +12,7 @@ class ManageVoteList(admin.ModelAdmin):
         (None, {'fields': ['title', 'hashSetKey', 'describe', 'voteType']}),
         ('date_option', {'fields': ['pubDate', 'expireDate']}),
         ('select_vote_config', {'fields': ['maxSelectCount']}),
-        ('video_vote_config', {'fields': ['videoURL','videoLength']}),
+        ('video_vote_config', {'fields': ['videoFile','videoLength']}),
     ]
     inlines = [EditOptions]
     vote_title = 'title'
