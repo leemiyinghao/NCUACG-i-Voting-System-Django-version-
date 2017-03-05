@@ -16,6 +16,8 @@ class VoteableUser(models.Model):
         return self.nickName
 
 class VoteList(models.Model):
+    def now_plus_3_day():
+        return timezone.now() + timedelta(days = 3)
     title = models.CharField(max_length=50, verbose_name='vote title')
     describe = models.TextField(max_length=500, verbose_name='vote describe')
     VOTE_TYPE = (
@@ -23,8 +25,8 @@ class VoteList(models.Model):
         ("s", "selectVote"),
     )
     voteType = models.CharField(max_length=1, choices=VOTE_TYPE, verbose_name='vote type')
-    pubDate = models.DateTimeField(default = timezone.now(), verbose_name='publish date')
-    expireDate = models.DateTimeField(default = timezone.now() + timedelta(days = 3), verbose_name='expire date')
+    pubDate = models.DateTimeField(default = timezone.now, verbose_name='publish date')
+    expireDate = models.DateTimeField(default = now_plus_3_day, verbose_name='expire date')
     videoFile = models.FileField(default='settings.MEDIA_ROOT/logos/anonymous.jpg', null=True, verbose_name='video file')
     maxSelectCount = models.IntegerField(default=1, verbose_name='max selection')
     videoLength = models.IntegerField(default=0, verbose_name='video length')
