@@ -5,7 +5,7 @@ from authomatic.providers import oauth1
 CONFIG = {
     'twitter': {
         'class_': oauth1.Twitter,
-        'consumer_key': 'hnjEkRqcepDCkkUmcv2xPmwYY',
-        'consumer_secret': 'Wn2F5eEQWCL6FSFOEp2FVmIj4jvTm2LJ452WRmw1Prr52R61AG',
+        'consumer_key': '',
+        'consumer_secret': '',
     }
 }
